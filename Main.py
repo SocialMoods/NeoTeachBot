@@ -17,8 +17,7 @@ os.makedirs(PHOTO_FOLDER, exist_ok=True)
 bot = telebot.TeleBot(API_TOKEN)
 
 # OpenAI API Key
-openai.api_key = os.getenv("OPENAI_API_KEY",
-                           "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")
+openai.api_key = os.getenv("OPENAI_API_KEY")
 THIS_MODEL = "gpt-4o-mini"
 
 
