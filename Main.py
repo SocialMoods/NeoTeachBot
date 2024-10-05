@@ -42,17 +42,20 @@ admin_state = {}
 
 
 def encode_image(image_path):
-    """Кодирует изображение в base64 для отправки в API."""
+    import base64
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
-
 
 def extract_text_from_image_with_gpt(image_path):
     """Использует GPT-4 для распознавания текста на изображении."""
     base64_image = encode_image(image_path)
 
-    response = openai.ChatCompletion.create(
-        model=THIS_MODEL,
+    client = OpenAI(
+        api_key=os.environ.get('OPENAI_API_KEY')  # Получаем ключ API из переменной окружения
+    )
+
+    response = client.chat.completions.create(
+        model="gpt-4",
         messages=[
             {
                 "role": "system",
@@ -74,7 +77,7 @@ def extract_text_from_image_with_gpt(image_path):
     )
 
     try:
-        description = response['choices'][0]['message']['content']
+        description = response.choices[0].message.content
         return description.strip()
     except Exception as e:
         print(f"Ошибка при распознавании текста: {e}")
